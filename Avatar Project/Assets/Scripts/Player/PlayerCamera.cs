@@ -16,12 +16,22 @@ public class PlayerCamera : MonoBehaviour
 
     void Start()
     {
-
+        Cursor.visible = false;
     }
 
     void Update()
     {
-        GetInput();
+        if (!Input.GetMouseButton(1))
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            GetInput();
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 
         Rotation();
     }
@@ -38,5 +48,10 @@ public class PlayerCamera : MonoBehaviour
         transform.LookAt(Target);
 
         Target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+    }
+
+    private void LookDir()
+    {
+
     }
 }
