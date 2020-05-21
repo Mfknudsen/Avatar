@@ -1041,6 +1041,10 @@ MonoBehaviour:
   AbilityKey1: 49
   AbilityKey2: 50
   AbilityKey3: 51
+  GetRock:
+    name: 
+    animeLength: 0
+  Combos: []
   Anime: {fileID: 7978169477447457516}
 --- !u!114 &3542466007132934884
 MonoBehaviour:
@@ -1173,7 +1177,7 @@ PrefabInstance:
     - target: {fileID: 4757836856755875625, guid: bd6ee82c5e06b3f4f86113cbf8261ae1,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4757836856755875626, guid: bd6ee82c5e06b3f4f86113cbf8261ae1,
         type: 3}
@@ -1190,7 +1194,9 @@ PrefabInstance:
       propertyPath: m_TagString
       value: MainCamera
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4757836856755875626, guid: bd6ee82c5e06b3f4f86113cbf8261ae1, type: 3}
+    - {fileID: 4757836856755875627, guid: bd6ee82c5e06b3f4f86113cbf8261ae1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bd6ee82c5e06b3f4f86113cbf8261ae1, type: 3}
 --- !u!1 &6455330624827210931 stripped
 GameObject:
