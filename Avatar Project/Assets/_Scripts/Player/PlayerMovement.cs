@@ -4,57 +4,33 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    #region Public Data
-    public GameObject PlayerModel;
-    public Transform CamTransform;
-    public Transform CamHolder;
-    public Transform TargetPos;
-    public Transform MoveTransform;
-    #endregion
+    public CharacterController controller;
+    public Transform Cam;
 
-    #region Private Data
-    private Vector3 MoveDir, RotDir;
-    private float inputX, inputZ;
-    [SerializeField]
-    private float moveSpeed = 1;
-    [SerializeField]
-    private float rotSpeed = 1;
-    private bool isGrounded = false;
-    private bool jumpNow = false;
-    #endregion
+    public float speed = 5.0f;
+    public float turnSmoothTime = 0.1f;
+    float turnSmoothVelocity;
+
+    private void Start()
+    {
+        controller = GetComponent<CharacterController>();
+    }
 
     private void Update()
     {
-        GetInput();
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
 
-        if (true)
+        Vector3 direction = new Vector3(horizontal, 0.0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
         {
-            Movement();
-            Rotation();
+            float targetAngel = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + Cam.eulerAngles.y;
+            float angel = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngel, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0.0f, angel, 0.0f);
+
+            Vector3 moveDir = Quaternion.Euler(0.0f, targetAngel, 0.0f) * Vector3.forward;
+            controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
-    }
-
-    private void GetInput()
-    {
-        inputX = Input.GetAxis("Horizontal");
-        inputZ = Input.GetAxis("Vertical");
-
-        if (Input.GetKey(KeyCode.Space) && !jumpNow && isGrounded)
-            jumpNow = true;
-    }
-
-    private void Movement()
-    {
-        MoveTransform.LookAt(TargetPos);
-
-        if (inputZ != 0 || inputX != 0)
-        {
-            transform.position = Vector3.Lerp(transform.position, transform.position + MoveTransform.forward * inputZ * moveSpeed * Time.deltaTime + MoveTransform.right * inputX * moveSpeed * Time.deltaTime, 0.5f);
-        }
-    }
-
-    private void Rotation()
-    {
-        PlayerModel.transform.rotation = Quaternion.Euler(new Vector3(0, PlayerModel.transform.rotation.eulerAngles.y + inputX * rotSpeed * Time.deltaTime, 0));
     }
 }

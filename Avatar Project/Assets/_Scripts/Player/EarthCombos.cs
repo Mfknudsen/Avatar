@@ -10,11 +10,13 @@ public class EarthCombos : MonoBehaviour
     [Header("Rock List:")]
     public string[] rockNames;
     public GameObject[] rockPrefabs;
-    private Dictionary<string, GameObject> rockList;
     [HideInInspector]
     public GameObject CurrentRocks;
+
+    private Dictionary<string, GameObject> rockList;
     private string moveDirection = "Front";
     private Dictionary<string, bool> buttonInput;
+    private string currentState = "readyState";
 
     private void Start()
     {
@@ -34,46 +36,47 @@ public class EarthCombos : MonoBehaviour
 
     private void ComboControlTree()
     {
-        if (buttonInput["Fast"] && moveDirection == "Front")
+        switch (currentState)
         {
-            GetRock1();
-        }
-        else if (buttonInput["Fast"] && moveDirection == "Right")
-        {
-            GetRock2();
-        }
-        else if (buttonInput["Fast"] && moveDirection == "Left")
-        {
-            GetRock3();
+            case "readyState":
+                if (buttonInput["Fast"])
+                {
+                    GetRock(moveDirection);
+                    currentState = "hasRock";
+                }
+
+                break;
+
+            case "hasRock":
+
+                break;
+
+            case "steadingSelf":
+
+                break;
+
+            case "stuned":
+
+                break;
+
+            default:
+                Debug.Log("Default State Selected!");
+                break;
         }
     }
 
     #region ComboParts
-    private void GetRock1()
+    private void GetRock(string direction)
     {
-        /// Spawn and prepare a little rock in front of the player using PointFront.
+        /// Spawn and prepare a little rock using direction to select a SpawnPoint.
+
+        int selectedSpawnPoint = 0;
+        if (direction == "Front")
+            selectedSpawnPoint = 0;
 
         GameObject newRock = Instantiate(rockList["TinyRock"]);
-        newRock.transform.position = SpawnPoints[0].position;
-        newRock.transform.rotation = SpawnPoints[0].rotation;
-    }
-
-    private void GetRock2()
-    {
-        /// Spawn and prepare a little rock to the left of the player using PointFront.
-
-        GameObject newRock = Instantiate(rockList["TinyRock"]);
-        newRock.transform.position = SpawnPoints[2].position;
-        newRock.transform.rotation = SpawnPoints[2].rotation;
-    }
-
-    private void GetRock3()
-    {
-        /// Spawn and prepare a little rock to the right of the player using PointFront.
-
-        GameObject newRock = Instantiate(rockList["TinyRock"]);
-        newRock.transform.position = SpawnPoints[3].position;
-        newRock.transform.rotation = SpawnPoints[3].rotation;
+        newRock.transform.position = SpawnPoints[selectedSpawnPoint].position;
+        newRock.transform.rotation = SpawnPoints[selectedSpawnPoint].rotation;
     }
 
     private void AccelerateRock1()
