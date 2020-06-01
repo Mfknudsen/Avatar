@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +21,7 @@ public class GetComboInput : MonoBehaviour
     public KeyCode[] KeyValue;
     [Header("Mouse UI:")]
     public GameObject MouseUI;
+    public CinemachineFreeLook CamController;
     [Space]
     public GameObject[] DirectionVisual;
     [Space]
@@ -27,6 +29,9 @@ public class GetComboInput : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         foreach (GameObject obj in DirectionVisual)
             obj.GetComponent<Image>().color = UI_Colors[1];
 
@@ -120,6 +125,25 @@ public class GetComboInput : MonoBehaviour
         {
             MouseUI.SetActive(false);
         }
+
+        if (MouseUI.activeSelf && CamController.enabled)
+        {
+            CamController.enabled = false;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else if (!MouseUI.activeSelf && !CamController.enabled)
+        {
+            CamController.enabled = true;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     private IEnumerator InputTimeFrame()
@@ -149,8 +173,6 @@ public class GetComboInput : MonoBehaviour
 
         foreach (string keyString in s)
             activeButtons[keyString] = false;
-
-        Debug.Log(EndValueString + ".    " + MouseDir + ".");
 
         currentTimeFrame = null;
     }

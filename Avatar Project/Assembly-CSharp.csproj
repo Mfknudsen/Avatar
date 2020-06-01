@@ -107,6 +107,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
+    <Compile Include="Assets\_Scripts\Bending\Earth\RockOrbit.cs" />
     <Compile Include="Assets\_Scripts\Math\MathParabola.cs" />
     <Compile Include="Assets\_Scripts\Player\EarthCombos.cs" />
     <Compile Include="Assets\_Scripts\Player\GetComboInput.cs" />
