@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class GetComboInput : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class GetComboInput : MonoBehaviour
     private Vector2 LastMousePos = Vector2.zero, NewMousePos = Vector2.zero;
     private string MouseDir = "Front";
 
-    [Header("KeysToCheck:")]
+    [Header("Values To Send:")]
+    public float timeDelay = 1.0f;
+    [Space]
     public string[] KeyNames;
     public KeyCode[] KeyValue;
     [Header("Mouse UI:")]
@@ -121,7 +124,7 @@ public class GetComboInput : MonoBehaviour
 
     private IEnumerator InputTimeFrame()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(timeDelay);
 
         InputParameters IP = new InputParameters();
         IP.Dir = MouseDir;

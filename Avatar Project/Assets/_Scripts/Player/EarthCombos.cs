@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
+using UnityEditor;
 
 public class EarthCombos : MonoBehaviour
 {
@@ -11,16 +11,22 @@ public class EarthCombos : MonoBehaviour
     public string[] rockNames;
     public GameObject[] rockPrefabs;
     private Dictionary<string, GameObject> rockList;
+    [Header("Combo List")]
+    public ComboEarth[] comboList = new ComboEarth[] { };
     [HideInInspector]
     public GameObject CurrentRocks;
     private string moveDirection = "Front";
     private Dictionary<string, bool> buttonInput;
+    private List<Dictionary<string, bool>> lastInput;
 
     private void Start()
     {
         rockList = new Dictionary<string, GameObject>();
-        for (int i = 0; i < rockNames.Length; i++)
-            rockList.Add(rockNames[i], rockPrefabs[i]);
+        if (rockNames.Length == rockPrefabs.Length)
+        {
+            for (int i = 0; i < rockNames.Length; i++)
+                rockList.Add(rockNames[i], rockPrefabs[i]);
+        }
     }
 
     public void ActInput(InputParameters Input)
@@ -34,48 +40,106 @@ public class EarthCombos : MonoBehaviour
 
     private void ComboControlTree()
     {
-        if (buttonInput["Fast"] && moveDirection == "Front")
+        foreach (ComboEarth comboPart in comboList)
         {
-            GetRock1();
+            bool checkReq = true;
+            Dictionary<string, bool> comboRequiredInput = comboPart.getReq();
+
+            foreach (string key in buttonInput.Keys)
+            {
+                if (buttonInput[key] != comboRequiredInput[key])
+                {
+                    checkReq = false;
+                    break;
+                }
+            }
+
+            if (moveDirection != comboPart.getDir())
+                checkReq = false;
+
+            bool checkPre = true;
+            if (checkReq)
+            {
+                List<Dictionary<string, bool>> comboPreviousInput = comboPart.getPre();
+
+                if (lastInput.Count == comboPreviousInput.Count)
+                {
+                    for (int i = 0; i < lastInput.Count; i++)
+                    {
+                        Dictionary<string, bool> currentLastInput = lastInput[i];
+                        Dictionary<string, bool> currentComboPreviousInput = comboPreviousInput[i];
+
+                        bool keepChecking = true;
+
+                        while (keepChecking)
+                        {
+                            foreach (string key in currentLastInput.Keys)
+                            {
+                                if (currentLastInput[key] != currentComboPreviousInput[key])
+                                {
+                                    checkPre = false;
+                                    keepChecking = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    checkPre = false;
+                }
+            }
+
+            if (checkReq && checkPre)
+            {
+                string actionCommand = comboPart.getAct();
+
+                if (actionCommand == "GetRock")
+                    GetRock(buttonInput, moveDirection);
+
+                lastInput.Add(buttonInput);
+                buttonInput.Clear();
+                break;
+            }
+            else
+            {
+                ResetComboTree();
+            }
         }
-        else if (buttonInput["Fast"] && moveDirection == "Right")
-        {
-            GetRock2();
-        }
-        else if (buttonInput["Fast"] && moveDirection == "Left")
-        {
-            GetRock3();
-        }
+    }
+
+    private void ResetComboTree()
+    {
+        buttonInput.Clear();
+        lastInput.Clear();
     }
 
     #region ComboParts
-    private void GetRock1()
+    #region ReadyRock
+    private void GetRock(Dictionary<string, bool> input, string dir)
     {
         /// Spawn and prepare a little rock in front of the player using PointFront.
+        int i = SpawnPoints.Length;
+        if (dir == "Front")
+            i = 0;
+        else if (dir == "Left")
+            i = 1;
+        else if (dir == "Right")
+            i = 2;
 
-        GameObject newRock = Instantiate(rockList["TinyRock"]);
-        newRock.transform.position = SpawnPoints[0].position;
-        newRock.transform.rotation = SpawnPoints[0].rotation;
+        if (i < SpawnPoints.Length && i > -1)
+        {
+            GameObject newRock = Instantiate(rockList["TinyRock"]);
+            newRock.transform.position = SpawnPoints[i].position;
+            newRock.transform.rotation = SpawnPoints[i].rotation;
+
+            newRock.GetComponent<TinyRock>().StartNow = true;
+        }
     }
+    #endregion
 
-    private void GetRock2()
-    {
-        /// Spawn and prepare a little rock to the left of the player using PointFront.
-
-        GameObject newRock = Instantiate(rockList["TinyRock"]);
-        newRock.transform.position = SpawnPoints[2].position;
-        newRock.transform.rotation = SpawnPoints[2].rotation;
-    }
-
-    private void GetRock3()
-    {
-        /// Spawn and prepare a little rock to the right of the player using PointFront.
-
-        GameObject newRock = Instantiate(rockList["TinyRock"]);
-        newRock.transform.position = SpawnPoints[3].position;
-        newRock.transform.rotation = SpawnPoints[3].rotation;
-    }
-
+    #region SpeedUpRock
     private void AccelerateRock1()
     {
 
@@ -90,7 +154,9 @@ public class EarthCombos : MonoBehaviour
     {
 
     }
+    #endregion
 
+    #region ThrowRock
     private void ThrowRock1()
     {
 
@@ -105,7 +171,9 @@ public class EarthCombos : MonoBehaviour
     {
 
     }
+    #endregion
 
+    #region CatchRock
     private void CatchRock1()
     {
 
@@ -120,7 +188,9 @@ public class EarthCombos : MonoBehaviour
     {
 
     }
+    #endregion
 
+    #region Block
     private void BlockRock1()
     {
 
@@ -135,7 +205,9 @@ public class EarthCombos : MonoBehaviour
     {
 
     }
+    #endregion
 
+    #region Move
     private void MoveRock1()
     {
 
@@ -150,5 +222,6 @@ public class EarthCombos : MonoBehaviour
     {
 
     }
+    #endregion
     #endregion
 }

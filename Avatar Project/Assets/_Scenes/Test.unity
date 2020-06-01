@@ -288,6 +288,7 @@ GameObject:
   - component: {fileID: 402218646}
   - component: {fileID: 402218645}
   - component: {fileID: 402218648}
+  - component: {fileID: 402218649}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -318,6 +319,8 @@ MonoBehaviour:
   rockPrefabs:
   - {fileID: 4909838935912441825, guid: 77d0d15d40a09974dbe0258fb2fe45a3, type: 3}
   - {fileID: 3439087262942761486, guid: 94ba8136d9476c74f92601143879405d, type: 3}
+  comboList:
+  - {fileID: 0}
   CurrentRocks: {fileID: 0}
 --- !u!114 &402218646
 MonoBehaviour:
@@ -331,6 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26f1dbc446f68f54cb81b1df5f269f3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeDelay: 0.5
   KeyNames:
   - Fast
   - Heavy
@@ -375,6 +379,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyTarget: {fileID: 687415207}
+--- !u!114 &402218649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402218644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 035eb4b9e50b1554db9704947c15b3ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  requiredInput:
+  - actIdx: 0
+    actionName:
+    - Fast
+    - Heavy
+    - Special
+    - Block
+    value: 0
+  - actIdx: 1
+    actionName:
+    - Fast
+    - Heavy
+    - Special
+    - Block
+    value: 0
+  - actIdx: 2
+    actionName:
+    - Fast
+    - Heavy
+    - Special
+    - Block
+    value: 0
+  - actIdx: 3
+    actionName:
+    - Fast
+    - Heavy
+    - Special
+    - Block
+    value: 0
+  dirIndex: 0
+  direction:
+  - Front
+  - Back
+  - Left
+  - Right
+  actIndex: 0
+  action:
+  - GetRock
+  - ThrowRock
+  preIndex: 0
 --- !u!1 &431533544
 GameObject:
   m_ObjectHideFlags: 0
