@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &32842306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,7 +424,6 @@ GameObject:
   - component: {fileID: 402218646}
   - component: {fileID: 402218645}
   - component: {fileID: 402218648}
-  - component: {fileID: 402218649}
   - component: {fileID: 402218650}
   m_Layer: 0
   m_Name: Player
@@ -469,6 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26f1dbc446f68f54cb81b1df5f269f3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeDelay: 1
   KeyNames:
   - Fast
   - Heavy
@@ -519,26 +519,6 @@ MonoBehaviour:
   EnemyTarget: {fileID: 687415207}
   CamController: {fileID: 32842306}
   CamFocusPoint: {fileID: 1499797527}
---- !u!114 &402218649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 402218644}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5830585b8a93b864a9e1c0f472e9f484, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxRockCount: 3
-  Rocks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  StartEndPoints:
-  - {fileID: 1641041702}
-  - {fileID: 739224300}
 --- !u!114 &402218650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1937,6 +1917,55 @@ Transform:
   m_Father: {fileID: 402218647}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1552574318
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1552574320}
+  - component: {fileID: 1552574319}
+  m_Layer: 0
+  m_Name: BendingSystem
+  m_TagString: BendingSystem
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1552574319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552574318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e61e992c7bfeb554dbe892d2b1378e7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Reset: 0
+  AirCombos:
+  - {fileID: 1893141118}
+  WaterCombos: []
+  EarthCombos: []
+  FireCombos: []
+--- !u!4 &1552574320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552574318}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.65784746, y: 3.5589104, z: 4.2648864}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1641041701
 GameObject:
   m_ObjectHideFlags: 0
@@ -2367,6 +2396,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1893141118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823f48c296125604eae53346e0ca2ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: New Air Combo
+  dirIndex: 0
+  direction:
+  - Front
+  - Back
+  - Left
+  - Right
+  actIndex: 0
+  action:
+  - AirSlash
+  - AirBoost
+  actionDescription:
+  - Slash the opponent with air.
+  - Boost the users speed using air.
+  preIndex: 0
+  preDirIdx: 
 --- !u!1 &2045531958
 GameObject:
   m_ObjectHideFlags: 0
@@ -2463,7 +2520,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056028268}
-  m_LocalRotation: {x: 0.120489545, y: -0.000000028621717, z: 0.00000020115021, w: 0.99271464}
+  m_LocalRotation: {x: 0.120489545, y: -0.000000020081204, z: 0.00000020011362, w: 0.99271464}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
