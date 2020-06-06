@@ -239,18 +239,18 @@ public class ComboWindow : EditorWindow
         }
         else if (bendingTypeIdx == 1)
         {
-            if (selectedWaterCombo != null)
-                WaterEditor.show(selectedWaterCombo);
+            //if (selectedWaterCombo != null)
+                //WaterEditor.show(selectedWaterCombo);
         }
         else if (bendingTypeIdx == 2)
         {
-            if (selectedEarthCombo != null)
-                EarthEditor.show(selectedEarthCombo);
+            //if (selectedEarthCombo != null)
+                //EarthEditor.show(selectedEarthCombo);
         }
         else if (bendingTypeIdx == 3)
         {
-            if (selectedFireCombo != null)
-                FireEditor.show(selectedFireCombo);
+            //if (selectedFireCombo != null)
+                //FireEditor.show(selectedFireCombo);
         }
     }
 
@@ -258,27 +258,7 @@ public class ComboWindow : EditorWindow
     {
         if (i == 0)
         {
-            ComboAir air = CreateInstance("ComboAir") as ComboAir;
-
-            ComboCollection col = new ComboCollection();
-
-            air.requiredInputKeys =  col.InputKey;
-            air.requiredInputValues = col.InputValue;
-
-            air.actIndex = 0;
-            air.direction = col.Directions;
-
-            air.actIndex = 0;
-            air.action = col.AirFunctions;
-            air.actionDescription = col.AirDescriptions;
-
-            air.preIndex = 0;
-            air.previousInputKeys = new List<string[]>();
-            air.previousInputValues = new List<bool[]>();
-            air.preDirIdx = new List<int>();
-            air.preDirection = new List<string[]>();
-
-            AirCombos.Add(air);
+            AirCombos.Add(CreateInstance("ComboAir") as ComboAir);
         }
         else if (i == 1)
         {

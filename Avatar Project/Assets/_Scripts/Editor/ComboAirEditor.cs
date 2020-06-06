@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.Linq;
 
 [CustomEditor(typeof(ComboAir)), System.Serializable]
 public class ComboAirEditor : Editor
@@ -125,86 +124,17 @@ public class ComboAirEditor : Editor
 
     private void displayPreviousInput(ComboAir script)
     {
-        GUILayout.Label("Previous Input", EditorStyles.boldLabel);
+        int size = script.preIndex;
 
-        GUILayout.BeginHorizontal("box");
-        GUILayout.Space(20);
-        GUI.backgroundColor = new Color(1, 1, 1, 1);
-        GUILayout.Label("Previous Acts Required:", GUILayout.Width(150));
-        script.preIndex = EditorGUILayout.IntPopup(script.preIndex, new string[] { "0", "1", "2", "3", "4", "5" }, new int[] { 0, 1, 2, 3, 4, 5 }, GUILayout.Width(30));
-        GUI.backgroundColor = standardBackgroundColor;
-        int current = script.preDirIdx.Count;
-        int set = script.preIndex;
-        GUILayout.EndHorizontal();
-
-        if (current < set)
+        if (size > 0)
         {
-            int i = set - current;
-            for (int j = 0; j < i; j++)
-                script.newPrevious(ref Collection);
-        }
-        else
-        {
-            for (int i = 0; i < current - set; i++)
-                script.removePrevious(i);
-        }
-
-        if (set > 2)
-        {
-            GUI.backgroundColor = new Color(1, 1, 1, 1);
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, true);
-            GUI.backgroundColor = standardBackgroundColor;
-        }
-
-        if (set > 0)
-        {
-            if (script.preDirIdx.Count > 0)
+            GUILayout.BeginVertical("box");
+            for (int i = 0; i < script.preIndex; i++)
             {
-                for (int i = 0; i < set; i++)
-                {
-                    GUILayout.Space(10);
-                    GUI.backgroundColor = new Color(0.5f, 0.5f, 0.5f, 1);
-                    GUILayout.BeginVertical("box");
-                    GUI.backgroundColor = standardBackgroundColor;
-                    GUILayout.Label("Step " + (i + 1), EditorStyles.boldLabel, GUILayout.Width(75));
 
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Space(20);
-                    GUILayout.Label("Direction", GUILayout.Width(75));
-                    GUI.backgroundColor = new Color(1, 1, 1, 1);
-                    int idx = script.preDirIdx[i];
-                    string[] dir = script.preDirection[i];
-                    script.preDirIdx[i] = EditorGUILayout.Popup(idx, dir, GUILayout.Width(75));
-                    GUI.backgroundColor = standardBackgroundColor;
-                    GUILayout.EndHorizontal();
 
-                    string[] pInputKeys = script.previousInputKeys[i];
-                    bool[] pInputValues = script.previousInputValues[i];
-
-                    GUILayout.Space(10);
-                    GUILayout.BeginVertical();
-                    for (int t = 0; t < 4; i++)
-                    {
-                        GUILayout.BeginHorizontal();
-                        GUILayout.Space(20);
-                        GUI.backgroundColor = standardBackgroundColor;
-
-                        GUILayout.Label(pInputKeys[t], GUILayout.Width(75));
-                        GUI.backgroundColor = new Color(1, 1, 1);
-                        bool state = pInputValues[t];
-                        pInputValues[t] = EditorGUILayout.Toggle(state);
-
-                        GUI.backgroundColor = standardBackgroundColor;
-                        GUILayout.EndHorizontal();
-                    }
-
-                    GUILayout.EndVertical();
-                    GUILayout.EndVertical();
-                }
             }
+            GUILayout.EndVertical();
         }
-
-        if (script.preIndex > 2)
-            EditorGUILayout.EndScrollView();
     }
 }

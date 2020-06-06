@@ -7,21 +7,66 @@ public class ComboAir : ScriptableObject
 {
     public string name = "New Air Combo";
 
-    public string[] requiredInputKeys;
-    public bool[] requiredInputValues;
+    public string[] requiredInputKeys = new string[] { 
+        "Fast", 
+        "Heavy", 
+        "Special", 
+        "Block" 
+    };
+    public bool[] requiredInputValues = new bool[] { 
+        false, 
+        false, 
+        false, 
+        false 
+    };
 
     public int dirIndex = 0;
-    public string[] direction;
+    public string[] direction = new string[] { 
+        "Front", 
+        "Back", 
+        "Left", 
+        "Right" 
+    };
 
     public int actIndex = 0;
-    public string[] action;
-    public string[] actionDescription;
+    public string[] action = new string[] {
+        "AirSlach",
+        "AirBoost"
+    };
+    public string[] actionDescription = new string[] {
+        "Slash the opponent with air,",
+        "Boost the users speed using air."
+    };
 
     public int preIndex;
-    public List<string[]> previousInputKeys;
-    public List<bool[]> previousInputValues;
-    public List<int> preDirIdx;
-    public List<string[]> preDirection;
+    public List<string[]> previousInputKeys = new List<string[]> {
+        new string[] { "Fast", "Heavy", "Special", "Block" },
+        new string[] { "Fast", "Heavy", "Special", "Block" },
+        new string[] { "Fast", "Heavy", "Special", "Block" },
+        new string[] { "Fast", "Heavy", "Special", "Block" },
+        new string[] { "Fast", "Heavy", "Special", "Block" },
+    };
+    public List<bool[]> previousInputValues = new List<bool[]> {
+        new bool[] { false, false, false, false },
+        new bool[] { false, false, false, false },
+        new bool[] { false, false, false, false },
+        new bool[] { false, false, false, false },
+        new bool[] { false, false, false, false }
+    };
+    public List<int> preDirIdx = new List<int> {
+        0,
+        0,
+        0,
+        0,
+        0
+    };
+    public List<string[]> preDirection = new List<string[]> {
+        new string[] { "Front", "Back", "Left", "Right" },
+        new string[] { "Front", "Back", "Left", "Right" },
+        new string[] { "Front", "Back", "Left", "Right" },
+        new string[] { "Front", "Back", "Left", "Right" },
+        new string[] { "Front", "Back", "Left", "Right" }
+    };
 
     public string getDir()
     {
@@ -31,30 +76,5 @@ public class ComboAir : ScriptableObject
     public string getAct()
     {
         return action[actIndex];
-    }
-
-    public void newPrevious(ref ComboCollection col)
-    {
-        preDirIdx.Add(0);
-        preDirection.Add(col.Directions);
-        previousInputKeys.Add(col.InputKey);
-        previousInputValues.Add(col.InputValue);
-    }
-
-    public void removePrevious(int I)
-    {
-        int i = preDirIdx.Count - I;
-
-        if (preDirIdx.Count > 0 && i < preDirIdx.Count)
-            preDirIdx.RemoveAt(i);
-
-        if (preDirection.Count > 0 && i < preDirection.Count)
-            preDirection.RemoveAt(i);
-
-        if (previousInputKeys.Count > 0 && i < previousInputKeys.Count)
-            previousInputKeys.RemoveAt(i);
-
-        if (previousInputValues.Count > 0 && i < previousInputValues.Count)
-            previousInputValues.RemoveAt(i);
     }
 }

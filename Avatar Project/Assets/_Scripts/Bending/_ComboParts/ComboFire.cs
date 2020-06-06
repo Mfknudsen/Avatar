@@ -5,24 +5,23 @@ using UnityEngine;
 [System.Serializable]
 public class ComboFire : ScriptableObject
 {
-    public string name = "New Fire Combo";
+    public string name = "New Air Combo";
 
-    public StringBoolDictionary[] requiredInput = new StringBoolDictionary[] { new StringBoolDictionary().pass(0, false), new StringBoolDictionary().pass(1, false), new StringBoolDictionary().pass(2, false), new StringBoolDictionary().pass(3, false) };
+    public string[] requiredInputKeys;
+    public bool[] requiredInputValues;
 
     public int dirIndex = 0;
-    public string[] direction = new string[] { "Front", "Back", "Left", "Right" };
+    public string[] direction;
 
     public int actIndex = 0;
-    public string[] action = new string[] { "FireWall", "FirePunch" };
-    public string[] actionDescription = new string[] {
-    "Shield the user with a wall of fire.",
-    "The user uses their fist to send a fireball against the opponent."
-    };
+    public string[] action;
+    public string[] actionDescription;
 
-    public int preIndex = 0;
-    public List<StringBoolDictionary[]> previousInput = new List<StringBoolDictionary[]>();
-    public List<int> preDirIdx = new List<int>();
-    public List<string[]> preDirection = new List<string[]>();
+    public int preIndex;
+    public List<string[]> previousInputKeys;
+    public List<bool[]> previousInputValues;
+    public List<int> preDirIdx;
+    public List<string[]> preDirection;
 
     public string getDir()
     {
@@ -32,42 +31,5 @@ public class ComboFire : ScriptableObject
     public string getAct()
     {
         return action[actIndex];
-    }
-
-    public Dictionary<string, bool> getReq()
-    {
-        Dictionary<string, bool> values = new Dictionary<string, bool>();
-
-        for (int i = 0; i < requiredInput.Length; i++)
-        {
-            StringBoolDictionary req = requiredInput[i];
-            string actName = req.actionName[req.actIdx];
-            if (actName != "")
-                values.Add(actName, req.value);
-            else
-                return null;
-        }
-
-        return values;
-    }
-
-    public List<Dictionary<string, bool>> getPre()
-    {
-        List<Dictionary<string, bool>> values = new List<Dictionary<string, bool>>();
-
-        foreach (StringBoolDictionary[] ray in previousInput)
-        {
-            Dictionary<string, bool> toAdd = new Dictionary<string, bool>();
-
-            for (int i = 0; i < ray.Length; i++)
-            {
-                StringBoolDictionary pre = ray[i];
-                toAdd.Add(pre.actionName[pre.actIdx], pre.value);
-            }
-
-            values.Add(toAdd);
-        }
-
-        return values;
     }
 }
