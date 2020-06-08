@@ -6,14 +6,13 @@ using UnityEngine.UIElements;
 [System.Serializable]
 public class ComboWindow : EditorWindow
 {
-    private int bendingTypeIdx = 2;
+    private int bendingTypeIdx = 0;
+    private bool showBackground = false;
     private string[] bendingTypeNames = new string[] { "Air", "Water", "Earth", "Fire" };
     private Color[] typeColor = new Color[] { new Color(0.75f, 0.75f, 0.75f, 1), new Color(0, 0, 1, 1), new Color(1, 0.75f, 0, 1), new Color(1, 0, 0, 1) };
     private Color standardBackgroundColor;
     private Color standardColor;
     private Vector2 scrollPos;
-    private bool showBackground = false;
-
     private ComboCollection collection = null;
 
     #region Combo Values
@@ -235,22 +234,22 @@ public class ComboWindow : EditorWindow
         if (bendingTypeIdx == 0)
         {
             if (selectedAirCombo != null)
-                AirEditor.show(selectedAirCombo, ref collection);
+                AirEditor.show(selectedAirCombo);
         }
         else if (bendingTypeIdx == 1)
         {
-            //if (selectedWaterCombo != null)
-                //WaterEditor.show(selectedWaterCombo);
+            if (selectedWaterCombo != null)
+                WaterEditor.show(selectedWaterCombo);
         }
         else if (bendingTypeIdx == 2)
         {
-            //if (selectedEarthCombo != null)
-                //EarthEditor.show(selectedEarthCombo);
+            if (selectedEarthCombo != null)
+                EarthEditor.show(selectedEarthCombo);
         }
         else if (bendingTypeIdx == 3)
         {
-            //if (selectedFireCombo != null)
-                //FireEditor.show(selectedFireCombo);
+            if (selectedFireCombo != null)
+                FireEditor.show(selectedFireCombo);
         }
     }
 
@@ -320,13 +319,5 @@ public class ComboWindow : EditorWindow
         WaterCombos = collection.WaterCombos;
         EarthCombos = collection.EarthCombos;
         FireCombos = collection.FireCombos;
-    }
-
-    private void ResetList()
-    {
-        AirCombos = new List<ComboAir>();
-        WaterCombos = new List<ComboWater>();
-        EarthCombos = new List<ComboEarth>();
-        FireCombos = new List<ComboFire>();
     }
 }

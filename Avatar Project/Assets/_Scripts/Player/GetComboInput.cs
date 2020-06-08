@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 public class GetComboInput : MonoBehaviour
 {
@@ -152,9 +151,11 @@ public class GetComboInput : MonoBehaviour
 
         InputParameters IP = new InputParameters();
         IP.Dir = MouseDir;
-        IP.Buttons = activeButtons;
+        IP.Buttons = new List<bool>();
+        foreach (bool b in activeButtons.Values)
+            IP.Buttons.Add(b);
 
-        SendMessage("ActInput", IP);
+        SendMessage("GetInput", IP);
 
         string EndValueString = "";
         List<string> s = new List<string>();
@@ -181,5 +182,5 @@ public class GetComboInput : MonoBehaviour
 public class InputParameters
 {
     public string Dir;
-    public Dictionary<string, bool> Buttons;
+    public List<bool> Buttons;
 }

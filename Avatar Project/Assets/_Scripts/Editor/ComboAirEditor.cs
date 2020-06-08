@@ -8,7 +8,6 @@ public class ComboAirEditor : Editor
 {
     private Color standardBackgroundColor = new Color(0, 0, 0, 0);
     private Vector2 scrollPos;
-    private ComboCollection Collection;
 
     public override void OnInspectorGUI()
     {
@@ -26,11 +25,8 @@ public class ComboAirEditor : Editor
         displayPreviousInput(script);
     }
 
-    public void show(ComboAir script, ref ComboCollection col)
+    public void show(ComboAir script)
     {
-        if (Collection == null)
-            Collection = col;
-
         GUI.backgroundColor = standardBackgroundColor;
 
         GUILayout.BeginHorizontal("box");
@@ -124,17 +120,69 @@ public class ComboAirEditor : Editor
 
     private void displayPreviousInput(ComboAir script)
     {
-        int size = script.preIndex;
+        GUILayout.BeginVertical();
+        GUILayout.Label("Previous Input:", EditorStyles.boldLabel);
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(20);
+        GUILayout.Label("Previous Count:", GUILayout.Width(95));
+        GUI.backgroundColor = new Color(1, 1, 1, 1);
+        script.preIndex = EditorGUILayout.IntPopup(
+            script.preIndex,
+            new string[] { "0", "1", "2", "3", "4", "5" },
+            new int[] { 0, 1, 2, 3, 4, 5 },
+            GUILayout.Width(35));
+        GUI.backgroundColor = standardBackgroundColor;
+        GUILayout.EndHorizontal();
 
-        if (size > 0)
+        if (script.preIndex > 0)
         {
+            GUI.backgroundColor = new Color(1, 1, 1, 1);
+            if (script.preIndex > 3)
+                scrollPos = GUILayout.BeginScrollView(scrollPos, false, true);
+            GUI.backgroundColor = standardBackgroundColor;
+
             GUILayout.BeginVertical("box");
             for (int i = 0; i < script.preIndex; i++)
             {
+                GUILayout.BeginVertical("box");
+                GUILayout.BeginHorizontal();
 
+                GUILayout.Space(20);
+                GUILayout.Label("Direction:", GUILayout.Width(75));
 
+                GUI.backgroundColor = new Color(1, 1, 1, 1);
+                script.preDirIdx[i] = EditorGUILayout.Popup(script.preDirIdx[i], script.direction, GUILayout.Width(75));
+                GUI.backgroundColor = standardBackgroundColor;
+
+                GUILayout.EndHorizontal();
+
+                bool[] newValues = script.getBoolArray(i);
+
+                for (int j = 0; j < 4; j++)
+                {
+                    GUILayout.BeginHorizontal();
+
+                    GUILayout.Space(20);
+                    GUILayout.Label(script.requiredInputKeys[j], GUILayout.Width(75));
+                    GUILayout.Space(20);
+
+                    GUI.backgroundColor = new Color(1, 1, 1, 1);
+                    newValues[j] = EditorGUILayout.Toggle(newValues[j], GUILayout.Width(50));
+                    GUI.backgroundColor = standardBackgroundColor;
+
+                    GUILayout.EndHorizontal();
+
+                }
+
+                script.saveBoolArray(i, newValues);
+
+                GUILayout.Space(10);
+                GUILayout.EndVertical();
             }
             GUILayout.EndVertical();
+            if (script.preIndex > 3)
+                GUILayout.EndScrollView();
         }
+        GUILayout.EndVertical();
     }
 }
