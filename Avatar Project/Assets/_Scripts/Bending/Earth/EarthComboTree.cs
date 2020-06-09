@@ -12,7 +12,7 @@ public class EarthComboTree : MonoBehaviour
     private List<string> preDirection = new List<string>();
     private List<bool[]> preInputValues = new List<bool[]>();
 
-    private bool comboFound = false;
+    private GameObject CurrentComboHolder = null;
     private ComboEarth selectedCombo = null;
     public bool comboReady = true;
 
@@ -32,9 +32,6 @@ public class EarthComboTree : MonoBehaviour
 
         for (int i = 0; i < RockNames.Count; i++)
             RockList.Add(RockNames[i], RockGameObjects[i]);
-
-        Debug.Log(RockNames.Count);
-        Debug.Log(RockGameObjects.Count);
     }
 
     public void GetInput(InputParameters ip)
@@ -48,6 +45,8 @@ public class EarthComboTree : MonoBehaviour
     private void CheckCombos()
     {
         selectedCombo = null;
+        bool comboFound = false;
+
         if (comboReady)
         {
             foreach (ComboEarth combo in EarthCombos)
@@ -57,7 +56,38 @@ public class EarthComboTree : MonoBehaviour
                     if (combo.direction[combo.dirIndex] == direction)
                     {
                         bool check = true;
-                        if (inputValues != combo.requiredInputValues)
+
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (combo.requiredInputValues[i] != inputValues[i])
+                                check = false;
+                        }
+
+                        if (combo.preIndex == preInputValues.Count)
+                        {
+                            for (int i = 0; i < combo.preIndex; i++)
+                            {
+                                bool[] toTest = new bool[4];
+
+                                if (i == 0)
+                                    toTest = combo.preValue1;
+                                else if (i == 1)
+                                    toTest = combo.preValue2;
+                                else if (i == 2)
+                                    toTest = combo.preValue3;
+                                else if (i == 3)
+                                    toTest = combo.preValue4;
+                                else
+                                    toTest = combo.preValue5;
+
+                                for (int j = 0; j < 4; j++)
+                                {
+                                    if (toTest[j] != preInputValues[i][j])
+                                        check = false;
+                                }
+                            }
+                        }
+                        else
                             check = false;
 
                         if (check)
@@ -90,6 +120,8 @@ public class EarthComboTree : MonoBehaviour
                 preDirection = new List<string>();
                 preInputValues = new List<bool[]>();
             }
+
+            selectedCombo = null;
         }
     }
 
@@ -101,7 +133,8 @@ public class EarthComboTree : MonoBehaviour
                 BoulderPunchFront(dir);
                 break;
 
-            case "":
+            case "MoveWall":
+                MoveShield();
                 break;
 
             case "EarthShield":
@@ -114,14 +147,29 @@ public class EarthComboTree : MonoBehaviour
 
     private void BoulderPunchFront(string dir)
     {
-        Debug.Log("Boulder Punch:  " + dir);
+        Debug.Log("Boulder Punch: \n" + dir);
 
 
     }
 
-    public void EarthShield()
+    private void EarthShield()
     {
         Debug.Log("Earth Shield");
+
+        GameObject obj = Instantiate(RockList["Rock Wall"]);
+
+        obj.transform.rotation = transform.rotation;
+        obj.transform.position = SpawnPoints[0].position - new Vector3(0, 1.5f, 0);
+
+        RockWall script = obj.AddComponent<RockWall>();
+        script.Wake();
+
+        gameObject.GetComponent<PlayerMovement>().canMove = false;
+    }
+
+    private void MoveShield()
+    {
+        Debug.Log("Move Shield");
     }
 
     #endregion

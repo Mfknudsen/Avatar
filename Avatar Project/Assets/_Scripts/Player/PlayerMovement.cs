@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
 
+    public bool canMove = true; 
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -18,19 +20,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        if (canMove) {
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
 
-        Vector3 direction = new Vector3(horizontal, 0.0f, vertical).normalized;
+            Vector3 direction = new Vector3(horizontal, 0.0f, vertical).normalized;
 
-        if (direction.magnitude >= 0.1f)
-        {
-            float targetAngel = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + Cam.eulerAngles.y;
-            float angel = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngel, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0.0f, angel, 0.0f);
+            if (direction.magnitude >= 0.1f)
+            {
+                float targetAngel = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + Cam.eulerAngles.y;
+                float angel = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngel, ref turnSmoothVelocity, turnSmoothTime);
+                transform.rotation = Quaternion.Euler(0.0f, angel, 0.0f);
 
-            Vector3 moveDir = Quaternion.Euler(0.0f, targetAngel, 0.0f) * Vector3.forward;
-            controller.Move(moveDir.normalized * speed * Time.deltaTime);
+                Vector3 moveDir = Quaternion.Euler(0.0f, targetAngel, 0.0f) * Vector3.forward;
+                controller.Move(moveDir.normalized * speed * Time.deltaTime);
+            }
         }
     }
 }

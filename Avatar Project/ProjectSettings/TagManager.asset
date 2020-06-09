@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerEyes
   - BendingSystem
+  - Enemy
   layers:
   - Default
   - TransparentFX

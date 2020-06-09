@@ -13,6 +13,14 @@ public class EarthComboTreeEditor : Editor
     {
         EarthComboTree script = (EarthComboTree)target;
 
+        if (GUILayout.Button("Reset"))
+        {
+            script.RockNames = new List<string>();
+            script.RockGameObjects = new List<GameObject>();
+        }
+
+        GUILayout.Space(10);
+
         RockLength = script.RockNames.Count;
 
         GUILayout.Space(20);
@@ -48,11 +56,11 @@ public class EarthComboTreeEditor : Editor
 
         GUILayout.BeginVertical("box");
 
-        for (int i = 0; i < script.SpawnPoints.Length; i++)
+        for (int i = 0; i < RockLength; i++)
         {
             GUILayout.BeginHorizontal("box");
 
-            script.RockNames[i] = EditorGUILayout.TextField(script.RockNames[i], GUILayout.Width(200));
+            script.RockNames[i] = EditorGUILayout.TextField(script.RockNames[i], GUILayout.Width(150));
             script.RockGameObjects[i] = (GameObject)EditorGUILayout.ObjectField(script.RockGameObjects[i], typeof(GameObject), true);
 
             GUILayout.Space(10);
@@ -60,13 +68,25 @@ public class EarthComboTreeEditor : Editor
         }
         GUILayout.EndVertical();
 
+        GUILayout.Space(10);
+        GUILayout.Label("Spawn Points:");
         GUILayout.BeginVertical("box");
+
+        if (script.SpawnPoints.Length != 4)
+            script.SpawnPoints = new Transform[4];
+        string[] Directions = new string[] { "Front", "Back", "Left", "Right" };
+        
         for (int i = 0; i < script.SpawnPoints.Length; i++)
         {
-            Debug.Log(i);
+            GUILayout.BeginHorizontal();
 
+            GUILayout.Label(Directions[i], GUILayout.Width(40));
+            GUILayout.Space(10);
             script.SpawnPoints[i] = (Transform)EditorGUILayout.ObjectField(script.SpawnPoints[i], typeof(Transform), true);
+
+            GUILayout.EndHorizontal();
         }
+
         GUILayout.EndVertical();
     }
 }
