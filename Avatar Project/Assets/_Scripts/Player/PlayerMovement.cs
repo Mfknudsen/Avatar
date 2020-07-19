@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Nrjwolf.Tools.AttachAttributes;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [GetComponent]
     public CharacterController controller;
     public Transform Cam;
 

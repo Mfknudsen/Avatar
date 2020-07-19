@@ -4,74 +4,144 @@ using UnityEngine;
 
 public class RockWall : MonoBehaviour
 {
-    private float speed = 10.0f;
-    private Vector3 startPos;
-    private Vector3 endPos = new Vector3();
-    private bool keepUp = true;
-    private bool moveWall = false;
+    private bool active = false;
+    private string dir = null;
 
-    public void Wake()
+    private bool lowState = false;
+    private bool moveState = false;
+    private bool throwState = false;
+
+    private Vector3 SpawnPointPos;
+    private Quaternion SpawnPointRot;
+    private float offset = 2;
+
+    private GameObject Wall = null;
+    private bool done = false;
+
+    public void StartNow(GameObject wall, string parsedDir)
     {
-        startPos = transform.position;
+        SpawnPointPos = transform.position;
+        SpawnPointRot = transform.rotation;
 
-        endPos = startPos + new Vector3(0, 3, 0);
-    }
+        dir = parsedDir;
 
-    private void Update()
-    {
-        if (keepUp)
+        if (dir == "Front")
         {
-            Rise();
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                moveWall = true;
-                keepUp = false;
-            }
+            SpawnPointPos = transform.position + (transform.forward * offset);
+            SpawnPointRot = transform.rotation;
         }
-        else if (moveWall)
+        else if (dir == "Left")
         {
-            Move();
+            SpawnPointPos = transform.position + (-transform.right * offset);
+            SpawnPointRot = Quaternion.Euler(transform.rotation.eulerAngles - new Vector3(0, 90, 0));
         }
         else
         {
-            Fall();
+            SpawnPointPos = transform.position + (transform.right * offset);
+            SpawnPointRot = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0, 90, 0));
         }
 
-        if (!Input.GetKey(KeyCode.Space) && !moveWall)
-            keepUp = false;
+        Wall = Instantiate(wall);
+        Wall.transform.position = SpawnPointPos;
+        wall.transform.rotation = SpawnPointRot;
+
+        active = true;
     }
 
-    private void Rise()
+    private void FixedUpdate()
     {
-        if (transform.position.y < endPos.y)
-            transform.position += transform.up * speed * Time.deltaTime;
-        else
-            transform.position = new Vector3(transform.position.x, endPos.y, transform.position.z);
-    }
-
-    private void Fall()
-    {
-        if (transform.position.y > startPos.y)
-            transform.position += -transform.up * speed * Time.deltaTime;
-        else
-            Destroy(gameObject);
-    }
-
-    private void Move()
-    {
-        transform.position += transform.forward * speed * Time.deltaTime;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (moveWall)
+        if (active && Wall != null)
         {
-            if (other.gameObject.tag == "Enemy")
-            {
-                moveWall = false;
+            if (lowState)
+                LowerWall();
+            else if (moveState)
+                MoveWall();
+            else if (throwState)
+                ThrowWall();
+        }
 
-                Destroy(gameObject);
-            }
+        if (done)
+        {
+            SendMessage("DoneCall");
+        }
+    }
+
+    public void LowerWall()
+    {
+        if (!lowState)
+        {
+
+        }
+        else
+            lowState = true;
+    }
+
+    public void MoveWall()
+    {
+        if (!moveState)
+        {
+
+        }
+        else
+            moveState = true;
+    }
+
+    public void ThrowWall(string newDir = null)
+    {
+        switch (dir)
+        {
+            case "Front":
+                switch (newDir)
+                {
+                    case "Front":
+                        break;
+
+                    case "Back":
+                        break;
+
+                    case "Left":
+                        break;
+
+                    case "Right":
+                        break;
+                }
+                break;
+
+            case "Left":
+                switch (newDir)
+                {
+                    case "Front":
+                        break;
+
+                    case "Back":
+                        break;
+
+                    case "Left":
+                        break;
+
+                    case "Right":
+                        break;
+                }
+                break;
+
+            case "Right":
+                switch (newDir)
+                {
+                    case "Front":
+                        break;
+
+                    case "Back":
+                        break;
+
+                    case "Left":
+                        break;
+
+                    case "Right":
+                        break;
+                }
+                break;
+
+
         }
     }
 }

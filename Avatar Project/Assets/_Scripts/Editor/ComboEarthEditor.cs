@@ -156,29 +156,24 @@ public class ComboEarthEditor : Editor
 
                 GUILayout.EndHorizontal();
 
-                bool[] newValues = script.getBoolArray(i);
+                int newValues = script.preFuncIdx[i];
 
-                for (int j = 0; j < 4; j++)
-                {
-                    GUILayout.BeginHorizontal();
+                GUILayout.BeginHorizontal();
 
-                    GUILayout.Space(20);
-                    GUILayout.Label(script.requiredInputKeys[j], GUILayout.Width(75));
-                    GUILayout.Space(20);
+                GUILayout.Space(20);
 
-                    GUI.backgroundColor = new Color(1, 1, 1, 1);
-                    newValues[j] = EditorGUILayout.Toggle(newValues[j], GUILayout.Width(50));
-                    GUI.backgroundColor = standardBackgroundColor;
+                GUI.backgroundColor = new Color(1, 1, 1, 1);
+                newValues = EditorGUILayout.Popup(newValues, script.action, GUILayout.Width(250));
+                GUI.backgroundColor = standardBackgroundColor;
 
-                    GUILayout.EndHorizontal();
+                GUILayout.EndHorizontal();
 
-                }
-
-                script.saveBoolArray(i, newValues);
+                script.preFuncIdx[i] = newValues;
 
                 GUILayout.Space(10);
                 GUILayout.EndVertical();
             }
+
             GUILayout.EndVertical();
             if (script.preIndex > 3)
                 GUILayout.EndScrollView();

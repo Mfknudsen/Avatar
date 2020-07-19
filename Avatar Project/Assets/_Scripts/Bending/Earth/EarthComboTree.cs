@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EarthComboTree : MonoBehaviour
 {
+    private bool attempted = false;
+
     private ComboEarth[] EarthCombos = new ComboEarth[0];
     private ComboCollection Collection = null;
 
@@ -12,7 +14,6 @@ public class EarthComboTree : MonoBehaviour
     private List<string> preDirection = new List<string>();
     private List<bool[]> preInputValues = new List<bool[]>();
 
-    private GameObject CurrentComboHolder = null;
     private ComboEarth selectedCombo = null;
     public bool comboReady = true;
 
@@ -20,10 +21,22 @@ public class EarthComboTree : MonoBehaviour
     public List<GameObject> RockGameObjects;
     private Dictionary<string, GameObject> RockList = new Dictionary<string, GameObject>();
 
-    public Transform[] SpawnPoints = new Transform[4];
+    public GameObject ComboHolder;
 
     private void Start()
     {
+        if (ComboHolder == null)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).name == "ComboHolder")
+                {
+                    ComboHolder = transform.GetChild(i).gameObject;
+                    break;
+                }
+            }
+        }
+
         if (Collection == null)
             Collection = GameObject.FindGameObjectWithTag("BendingSystem").GetComponent<ComboCollection>();
 
@@ -42,6 +55,13 @@ public class EarthComboTree : MonoBehaviour
         CheckCombos();
     }
 
+    public void DoneCall()
+    {
+        selectedCombo = null;
+
+        comboReady = true;
+    }
+
     private void CheckCombos()
     {
         selectedCombo = null;
@@ -57,28 +77,17 @@ public class EarthComboTree : MonoBehaviour
                     {
                         bool check = true;
 
-                        for (int i = 0; i < 4; i++)
-                        {
-                            if (combo.requiredInputValues[i] != inputValues[i])
-                                check = false;
-                        }
-
                         if (combo.preIndex == preInputValues.Count)
                         {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (combo.requiredInputValues[i] != inputValues[i])
+                                    check = false;
+                            }
+
                             for (int i = 0; i < combo.preIndex; i++)
                             {
                                 bool[] toTest = new bool[4];
-
-                                if (i == 0)
-                                    toTest = combo.preValue1;
-                                else if (i == 1)
-                                    toTest = combo.preValue2;
-                                else if (i == 2)
-                                    toTest = combo.preValue3;
-                                else if (i == 3)
-                                    toTest = combo.preValue4;
-                                else
-                                    toTest = combo.preValue5;
 
                                 for (int j = 0; j < 4; j++)
                                 {
@@ -122,6 +131,14 @@ public class EarthComboTree : MonoBehaviour
             }
 
             selectedCombo = null;
+
+            if (!attempted)
+            {
+                attempted = true;
+                CheckCombos();
+            }
+            else
+                attempted = false;
         }
     }
 
@@ -130,47 +147,36 @@ public class EarthComboTree : MonoBehaviour
         switch (comboFunction)
         {
             case "BoulderPunch":
-                BoulderPunchFront(dir);
                 break;
 
             case "MoveWall":
-                MoveShield();
+                ComboHolder.GetComponent<RockWall>().MoveWall();
                 break;
 
             case "EarthShield":
-                EarthShield();
+                ComboHolder.AddComponent<RockWall>().StartNow(RockList["Rock Wall"], dir);
+                break;
+
+            case "LowerWall":
+                ComboHolder.GetComponent<RockWall>().LowerWall();
+                break;
+
+            case "ThrowWall":
+                ComboHolder.GetComponent<RockWall>().ThrowWall(dir);
+                break;
+
+            case "RaiseSmallBoulder":
+                ComboHolder.AddComponent<RaiseSmallBoulder>().RaiseBoulders(dir);
+                break;
+
+            case "KickSmallBoulder":
+                break;
+
+            case "ChargeLow":
+                break;
+
+            case "ChargeHigh":
                 break;
         }
     }
-
-    #region ComboFunctions
-
-    private void BoulderPunchFront(string dir)
-    {
-        Debug.Log("Boulder Punch: \n" + dir);
-
-
-    }
-
-    private void EarthShield()
-    {
-        Debug.Log("Earth Shield");
-
-        GameObject obj = Instantiate(RockList["Rock Wall"]);
-
-        obj.transform.rotation = transform.rotation;
-        obj.transform.position = SpawnPoints[0].position - new Vector3(0, 1.5f, 0);
-
-        RockWall script = obj.AddComponent<RockWall>();
-        script.Wake();
-
-        gameObject.GetComponent<PlayerMovement>().canMove = false;
-    }
-
-    private void MoveShield()
-    {
-        Debug.Log("Move Shield");
-    }
-
-    #endregion
 }

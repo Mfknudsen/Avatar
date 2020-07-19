@@ -12,7 +12,7 @@ public class ComboCollection : MonoBehaviour
 
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     public void SaveLists(List<ComboAir> airCombos, List<ComboWater> waterCombos, List<ComboEarth> earthCombos, List<ComboFire> fireCombos)

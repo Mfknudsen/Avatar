@@ -6,10 +6,21 @@ using UnityEngine.UIElements;
 [System.Serializable]
 public class ComboWindow : EditorWindow
 {
+    private bool combosUpdated = false;
     private int bendingTypeIdx = 0;
     private bool showBackground = false;
-    private string[] bendingTypeNames = new string[] { "Air", "Water", "Earth", "Fire" };
-    private Color[] typeColor = new Color[] { new Color(0.75f, 0.75f, 0.75f, 1), new Color(0, 0, 1, 1), new Color(1, 0.75f, 0, 1), new Color(1, 0, 0, 1) };
+    private string[] bendingTypeNames = new string[] {
+        "Air",
+        "Water",
+        "Earth",
+        "Fire"
+    };
+    private Color[] typeColor = new Color[] {
+        new Color(1.5f, 1.5f, 1.5f),
+        new Color(0, 0.4f, 0.8f),
+        new Color(0.7f, 0.5f, 0),
+        new Color(2, 0, 0)
+    };
     private Color standardBackgroundColor;
     private Color standardColor;
     private Vector2 scrollPos;
@@ -41,6 +52,8 @@ public class ComboWindow : EditorWindow
 
     private void OnEnable()
     {
+        combosUpdated = false;
+
         collection = GameObject.FindGameObjectWithTag("BendingSystem").GetComponent<ComboCollection>();
 
         if (collection == null)
@@ -78,6 +91,9 @@ public class ComboWindow : EditorWindow
             collection = GameObject.FindGameObjectWithTag("BendingSystem").GetComponent<ComboCollection>();
 
         LoadLists();
+
+        if (!combosUpdated)
+            UpdateOldCombos();
 
         drawTopMenu();
 
@@ -137,6 +153,7 @@ public class ComboWindow : EditorWindow
     {
         EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
+
         GUI.backgroundColor = typeColor[0];
         if (GUILayout.Button("Air"))
         {
@@ -145,6 +162,7 @@ public class ComboWindow : EditorWindow
             selectedEarthCombo = null;
             selectedFireCombo = null;
         }
+
         GUI.backgroundColor = typeColor[1];
         if (GUILayout.Button("Water"))
         {
@@ -153,6 +171,7 @@ public class ComboWindow : EditorWindow
             selectedEarthCombo = null;
             selectedFireCombo = null;
         }
+
         GUI.backgroundColor = typeColor[2];
         if (GUILayout.Button("Earth"))
         {
@@ -161,6 +180,7 @@ public class ComboWindow : EditorWindow
             selectedWaterCombo = null;
             selectedFireCombo = null;
         }
+
         GUI.backgroundColor = typeColor[3];
         if (GUILayout.Button("Fire"))
         {
@@ -169,6 +189,7 @@ public class ComboWindow : EditorWindow
             selectedWaterCombo = null;
             selectedEarthCombo = null;
         }
+
         EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(10);
@@ -195,36 +216,43 @@ public class ComboWindow : EditorWindow
 
     private void drawSidebar()
     {
+        GUI.backgroundColor = new Color(2, 2, 2);
+        GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+        buttonStyle.normal.textColor = Color.black;
         if (bendingTypeIdx == 0 && AirCombos.Count > 0)
         {
             foreach (ComboAir combo in AirCombos)
             {
-                if (GUILayout.Button(combo.name))
+                if (GUILayout.Button(combo.name, buttonStyle))
                     selectedAirCombo = combo;
+                GUILayout.Space(5);
             }
         }
         else if (bendingTypeIdx == 1 && WaterCombos.Count > 0)
         {
             foreach (ComboWater combo in WaterCombos)
             {
-                if (GUILayout.Button(combo.name))
+                if (GUILayout.Button(combo.name, buttonStyle))
                     selectedWaterCombo = combo;
+                GUILayout.Space(5);
             }
         }
         else if (bendingTypeIdx == 2 && EarthCombos.Count > 0)
         {
             foreach (ComboEarth combo in EarthCombos)
             {
-                if (GUILayout.Button(combo.name))
+                if (GUILayout.Button(combo.name, buttonStyle))
                     selectedEarthCombo = combo;
+                GUILayout.Space(5);
             }
         }
         else if (bendingTypeIdx == 3 && FireCombos.Count > 0)
         {
             foreach (ComboFire combo in FireCombos)
             {
-                if (GUILayout.Button(combo.name))
+                if (GUILayout.Button(combo.name, buttonStyle))
                     selectedFireCombo = combo;
+                GUILayout.Space(5);
             }
         }
     }
@@ -256,51 +284,30 @@ public class ComboWindow : EditorWindow
     private void createNewComboPart(int i)
     {
         if (i == 0)
-        {
             AirCombos.Add(CreateInstance("ComboAir") as ComboAir);
-        }
         else if (i == 1)
-        {
             WaterCombos.Add(CreateInstance("ComboWater") as ComboWater);
-        }
         else if (i == 2)
-        {
             EarthCombos.Add(CreateInstance("ComboEarth") as ComboEarth);
-        }
         else if (i == 3)
-        {
             FireCombos.Add(CreateInstance("ComboFire") as ComboFire);
-        }
-        else
-            Debug.Log("Failed to create new combo part");
     }
 
     private void removeSelectedComboPart()
     {
         if (bendingTypeIdx == 0)
-        {
             AirCombos.Remove(selectedAirCombo);
-            selectedAirCombo = null;
-        }
         else if (bendingTypeIdx == 1)
-        {
             WaterCombos.Remove(selectedWaterCombo);
-            selectedWaterCombo = null;
-        }
         else if (bendingTypeIdx == 2)
-        {
             EarthCombos.Remove(selectedEarthCombo);
-            selectedEarthCombo = null;
-        }
         else if (bendingTypeIdx == 3)
-        {
             FireCombos.Remove(selectedFireCombo);
-            selectedFireCombo = null;
-        }
-        else
-        {
-            Debug.Log("Failed to remove combo part");
-        }
+
+        selectedFireCombo = null;
+        selectedAirCombo = null;
+        selectedWaterCombo = null;
+        selectedEarthCombo = null;
     }
 
     private void SaveLists()
@@ -319,5 +326,112 @@ public class ComboWindow : EditorWindow
         WaterCombos = collection.WaterCombos;
         EarthCombos = collection.EarthCombos;
         FireCombos = collection.FireCombos;
+    }
+
+    private void UpdateOldCombos()
+    {
+        int updateCount = 0;
+
+        List<ComboAir> tempAir = new List<ComboAir>();
+        for (int i = 0; i < AirCombos.Count; i++)
+        {
+            updateCount++;
+
+            ComboAir air = AirCombos[i];
+            ComboAir newAir = CreateInstance("ComboAir") as ComboAir;
+
+            if (newAir != null && air != null)
+            {
+                newAir.name = air.name;
+                newAir.dirIndex = air.dirIndex;
+                newAir.actIndex = air.actIndex;
+                newAir.requiredInputValues = air.requiredInputValues;
+                newAir.preIndex = air.preIndex;
+                newAir.preFuncIdx = air.preFuncIdx;
+                newAir.preDirIdx = air.preDirIdx;
+
+                tempAir.Add(newAir);
+            }
+            else
+                Debug.Log("Fail in Air Update");
+        }
+        AirCombos = tempAir;
+
+        List<ComboWater> tempWater = new List<ComboWater>();
+        for (int i = 0; i < WaterCombos.Count; i++)
+        {
+            updateCount++;
+
+            ComboWater water = WaterCombos[i];
+            ComboWater newWater = CreateInstance("ComboWater") as ComboWater;
+
+            if (newWater != null && water != null)
+            {
+                newWater.name = water.name;
+                newWater.dirIndex = water.dirIndex;
+                newWater.actIndex = water.actIndex;
+                newWater.requiredInputValues = water.requiredInputValues;
+                newWater.preIndex = water.preIndex;
+                newWater.preFuncIdx = water.preFuncIdx;
+                newWater.preDirIdx = water.preDirIdx;
+
+                tempWater.Add(newWater);
+            }
+            else
+                Debug.Log("Fail in Water Update");
+        }
+        WaterCombos = tempWater;
+
+        List<ComboEarth> tempEarth = new List<ComboEarth>();
+        for (int i = 0; i < EarthCombos.Count; i++)
+        {
+            updateCount++;
+
+            ComboEarth earth = EarthCombos[i];
+            ComboEarth newEarth = CreateInstance("ComboEarth") as ComboEarth;
+
+            if (newEarth != null && earth != null)
+            {
+                newEarth.name = earth.name;
+                newEarth.dirIndex = earth.dirIndex;
+                newEarth.actIndex = earth.actIndex;
+                newEarth.requiredInputValues = earth.requiredInputValues;
+                newEarth.preIndex = earth.preIndex;
+                newEarth.preFuncIdx = earth.preFuncIdx;
+                newEarth.preDirIdx = earth.preDirIdx;
+
+                tempEarth.Add(newEarth);
+            }
+            else
+                Debug.Log("Fail in Earth Update");
+        }
+        EarthCombos = tempEarth;
+
+        List<ComboFire> tempFire = new List<ComboFire>();
+        for (int i = 0; i < FireCombos.Count; i++)
+        {
+            updateCount++;
+
+            ComboFire fire = FireCombos[i];
+            ComboFire newFire = CreateInstance("ComboFire") as ComboFire;
+
+            if (newFire != null && fire != null)
+            {
+                newFire.name = fire.name;
+                newFire.dirIndex = fire.dirIndex;
+                newFire.actIndex = fire.actIndex;
+                newFire.requiredInputValues = fire.requiredInputValues;
+                newFire.preIndex = fire.preIndex;
+                newFire.preFuncIdx = fire.preFuncIdx;
+                newFire.preDirIdx = fire.preDirIdx;
+
+                tempFire.Add(newFire);
+            }
+            else
+                Debug.Log("Fail in Fire Update");
+        }
+        FireCombos = tempFire;
+
+        combosUpdated = true;
     }
 }

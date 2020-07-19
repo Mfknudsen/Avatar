@@ -26,21 +26,25 @@ public class ComboEarth : ScriptableObject
     public int actIndex = 0;
     public string[] action = new string[] {
         "BoulderPunch",
-        "EarthShield"
+        "EarthShield",
+        "ThrowWall",
+        "LowerWall",
+        "RaiseSmallBoulder",
+        "KickSmallBoulder",
+        "ChargeLow",
+        "ChargeHigh"
     };
     public string[] actionDescription = new string[] {
         "Punch a boulder towards the opponent.",
-        "Raise a shield of earth in front of yourself."
+        "Raise a shield of earth in front of yourself.",
+        "Raise a small boulder from the ground.",
+        "Kick a small boulder that the character is holding.",
+        "Charge for a big low attack.",
+        "Charge for a big high attack."
     };
 
     public int preIndex = 0;
-    #region Previous Input Values
-    public bool[] preValue1 = new bool[4];
-    public bool[] preValue2 = new bool[4];
-    public bool[] preValue3 = new bool[4];
-    public bool[] preValue4 = new bool[4];
-    public bool[] preValue5 = new bool[4];
-    #endregion
+    public int[] preFuncIdx = new int[5];
     public int[] preDirIdx = new int[5];
 
     public string getDir()
@@ -51,37 +55,5 @@ public class ComboEarth : ScriptableObject
     public string getAct()
     {
         return action[actIndex];
-    }
-
-    public bool[] getBoolArray(int i)
-    {
-        bool[] toSend = new bool[4];
-
-        if (i == 0)
-            toSend = preValue1;
-        else if (i == 1)
-            toSend = preValue2;
-        else if (i == 2)
-            toSend = preValue3;
-        else if (i == 3)
-            toSend = preValue4;
-        else if (i == 4)
-            toSend = preValue5;
-
-        return toSend;
-    }
-
-    public void saveBoolArray(int i, bool[] received)
-    {
-        if (i == 0)
-            preValue1 = received;
-        else if (i == 1)
-            preValue2 = received;
-        else if (i == 2)
-            preValue3 = received;
-        else if (i == 3)
-            preValue4 = received;
-        else if (i == 4)
-            preValue5 = received;
     }
 }

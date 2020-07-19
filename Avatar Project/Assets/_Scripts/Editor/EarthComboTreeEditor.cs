@@ -67,26 +67,5 @@ public class EarthComboTreeEditor : Editor
             GUILayout.EndHorizontal();
         }
         GUILayout.EndVertical();
-
-        GUILayout.Space(10);
-        GUILayout.Label("Spawn Points:");
-        GUILayout.BeginVertical("box");
-
-        if (script.SpawnPoints.Length != 4)
-            script.SpawnPoints = new Transform[4];
-        string[] Directions = new string[] { "Front", "Back", "Left", "Right" };
-        
-        for (int i = 0; i < script.SpawnPoints.Length; i++)
-        {
-            GUILayout.BeginHorizontal();
-
-            GUILayout.Label(Directions[i], GUILayout.Width(40));
-            GUILayout.Space(10);
-            script.SpawnPoints[i] = (Transform)EditorGUILayout.ObjectField(script.SpawnPoints[i], typeof(Transform), true);
-
-            GUILayout.EndHorizontal();
-        }
-
-        GUILayout.EndVertical();
     }
 }
