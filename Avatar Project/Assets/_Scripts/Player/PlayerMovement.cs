@@ -5,11 +5,9 @@ using Nrjwolf.Tools.AttachAttributes;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [GetComponent]
-    public CharacterController controller;
+    [GetComponent]public CharacterController controller;
     public Transform Cam;
-
-    public float speed = 5.0f;
+    [System.Serializable]private float speed = 5.0f;
     public float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
 
